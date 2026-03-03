@@ -12,6 +12,21 @@ export const parseLottoData = () => {
   }).reverse();
 };
 
+export const getFrequencyMap = (draws) => {
+  const freq = {};
+  for (let n = 1; n <= 45; n++) freq[n] = 0;
+  draws.forEach(d => d.numbers.forEach(n => freq[n]++));
+  return freq;
+};
+
+export const getRecentFrequencyMap = (draws, count = 10) => {
+  const recent = draws.slice(-count);
+  const freq = {};
+  for (let n = 1; n <= 45; n++) freq[n] = 0;
+  recent.forEach(d => d.numbers.forEach(n => freq[n]++));
+  return freq;
+};
+
 export const buildAIScores = (draws) => {
   const total = draws.length;
   const recent50 = draws.slice(-Math.min(50, total));
@@ -53,13 +68,13 @@ export const buildAIScores = (draws) => {
     score[n] += (shortFreq[n] / recentLen) * 3.0;
   }
 
-  // interval
+  // interval score (overdue bonus)
   for (let n = 1; n <= 45; n++) {
     const interval = total - lastIndex[n];
     score[n] += Math.exp(-interval / 40) * 2.0;
   }
 
-  // simple correlation
+  // co-occurrence correlation
   draws.forEach(d => {
     d.numbers.forEach(a => {
       d.numbers.forEach(b => {
@@ -85,4 +100,8 @@ export const generateAISet = (scores) => {
   const numbers = sorted.map(([n]) => parseInt(n, 10));
   const selected = _.sampleSize(numbers, 6);
   return selected.sort((a, b) => a - b);
+};
+
+export const generateMultipleSets = (scores, count = 5) => {
+  return Array.from({ length: count }, () => generateAISet(scores));
 };

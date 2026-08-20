@@ -1,33 +1,37 @@
 import React from 'react';
+import { ballColor } from '../lib/colors';
 
-export default function NumberBall({ number, size = 'normal' }) {
-  const getColor = (num) => {
-    if (num <= 10) return '#facc15';
-    if (num <= 20) return '#3b82f6';
-    if (num <= 30) return '#ef4444';
-    if (num <= 40) return '#6b7280';
-    return '#22c55e';
-  };
-
-  const sizePx = size === 'large' ? 64 : size === 'small' ? 36 : 48;
+/**
+ * 크기는 클래스로만 정한다. 인라인 스타일로 주면 미디어 쿼리가
+ * 이를 덮어쓸 수 없어서 좁은 화면에서 줄바꿈이 생긴다.
+ */
+export default function NumberBall({
+  number,
+  size = 'md',
+  dimmed = false,
+  highlight = false,
+  onClick,
+  title,
+}) {
+  const Tag = onClick ? 'button' : 'span';
 
   return (
-    <div
-      style={{
-        width: sizePx,
-        height: sizePx,
-        borderRadius: '999px',
-        background: `radial-gradient(circle at 30% 30%, #ffffff, ${getColor(number)})`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#111827',
-        fontWeight: 800,
-        fontSize: size === 'large' ? 24 : size === 'small' ? 14 : 18,
-        boxShadow: '0 8px 20px rgba(0,0,0,0.4)',
-      }}
+    <Tag
+      type={onClick ? 'button' : undefined}
+      onClick={onClick}
+      title={title}
+      className={[
+        'ball',
+        `ball--${size}`,
+        highlight ? 'ball--highlight' : '',
+        dimmed ? 'ball--dimmed' : '',
+        onClick ? 'ball--interactive' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={{ '--ball-color': ballColor(number) }}
     >
       {number}
-    </div>
+    </Tag>
   );
 }

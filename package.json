@@ -1,14 +1,15 @@
 {
-  "name": "lotto-ai-roulette",
-  "version": "1.0.0",
+  "name": "lotto-number-predictor",
+  "version": "2.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:standalone": "vite build && node scripts/build-standalone.mjs"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

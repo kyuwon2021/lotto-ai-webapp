@@ -1,5 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Hero from './components/Hero';
+import AdSlot from './components/AdSlot';
 import PredictPanel from './components/PredictPanel';
+import CheckPanel from './components/CheckPanel';
 import MachinePanel from './components/MachinePanel';
 import StatsPanel from './components/StatsPanel';
 import SavedPanel from './components/SavedPanel';
@@ -9,7 +12,8 @@ import { averageSum } from './lib/stats';
 import { loadSets, addSet, removeSet, clearSets } from './lib/storage';
 
 const TABS = [
-  { key: 'predict', label: '예측' },
+  { key: 'predict', label: '번호 받기' },
+  { key: 'check', label: '당첨 확인' },
   { key: 'machine', label: '추첨기' },
   { key: 'stats', label: '통계' },
   { key: 'saved', label: '보관함' },
@@ -20,6 +24,7 @@ const draws = parseDraws();
 export default function App() {
   const [tab, setTab] = useState('predict');
   const [saved, setSaved] = useState([]);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     setSaved(loadSets());
@@ -35,24 +40,24 @@ export default function App() {
   const handleSave = useCallback((numbers, source) => {
     setSaved(addSet({ numbers, source }));
   }, []);
-
   const handleRemove = useCallback((id) => setSaved(removeSet(id)), []);
   const handleClear = useCallback(() => setSaved(clearSets()), []);
+
+  const goTo = useCallback((key) => {
+    setTab(key);
+    contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   const first = draws[0];
   const last = draws[draws.length - 1];
 
   return (
     <div className="app">
-      <header className="masthead">
-        <div className="masthead__brand">
-          <span className="masthead__dot" aria-hidden="true" />
-          <h1>로또 번호 예측기</h1>
-        </div>
-        <p className="masthead__sub">
-          {first?.round}–{last?.round}회 · 총 {draws.length}회분 당첨 데이터 분석
-        </p>
-      </header>
+      <Hero
+        drawCount={draws.length}
+        onPrimary={() => goTo('predict')}
+        onSecondary={() => goTo('check')}
+      />
 
       <nav className="tabs" aria-label="화면 선택">
         {TABS.map((t) => (
@@ -71,7 +76,7 @@ export default function App() {
         ))}
       </nav>
 
-      <main className="content">
+      <main className="content" ref={contentRef}>
         {tab === 'predict' && (
           <PredictPanel
             model={model}
@@ -81,6 +86,7 @@ export default function App() {
             onSave={handleSave}
           />
         )}
+        {tab === 'check' && <CheckPanel draws={draws} saved={saved} />}
         {tab === 'machine' && (
           <MachinePanel
             model={model}
@@ -100,34 +106,47 @@ export default function App() {
         )}
       </main>
 
+      <AdSlot slot={import.meta.env.VITE_AD_SLOT_FOOTER} minHeight={100} />
+
       <footer className="footer">
         <details className="footer__details">
-          <summary>모델이 보는 4가지 지표</summary>
+          <summary>번호는 어떻게 만들어지나요?</summary>
+          <p className="footer__lead">
+            {first?.round}–{last?.round}회 당첨 번호에서 아래 4가지를 집계한 뒤,
+            0~1로 정규화해 가중 합산합니다.
+          </p>
           <ul>
             <li>
               <b>출현 빈도 ({Math.round(weights.base * 100)}%)</b> — 전체 기간
-              동안 번호가 나온 횟수.
+              동안 번호가 나온 횟수
             </li>
             <li>
               <b>최근 흐름 ({Math.round(weights.recent * 100)}%)</b> — 최근 20회
-              안에서의 출현.
+              안에서의 출현
             </li>
             <li>
               <b>미출현 기간 ({Math.round(weights.due * 100)}%)</b> — 마지막
-              출현 이후 지난 회차 수.
+              출현 이후 지난 회차 수
             </li>
             <li>
               <b>동반 출현 ({Math.round(weights.synergy * 100)}%)</b> — 다른
-              번호와 같이 나온 정도.
+              번호와 같이 나온 정도
             </li>
           </ul>
         </details>
 
         <p className="footer__note">
           로또 추첨은 매 회차가 독립적인 확률 게임입니다. 과거 데이터로 다음 회차를
-          맞힐 수는 없으며, 이 앱의 &lsquo;균형도&rsquo;는 당첨 확률이 아니라
-          조합의 구조가 과거 당첨 조합과 얼마나 비슷한지를 나타내는 참고
-          수치입니다. 재미로만 사용해 주세요.
+          맞힐 수는 없으며, 이 사이트가 만드는 번호의 당첨 확률은 직접 고른 번호나
+          자동 번호와 <b>완전히 같습니다</b>. &lsquo;균형도&rsquo;는 당첨 확률이
+          아니라 조합의 구조가 과거 당첨 조합과 얼마나 비슷한지를 나타내는 참고
+          수치입니다.
+        </p>
+
+        <p className="footer__note">
+          19세 미만은 복권을 구매할 수 없습니다. 과도한 구매는 사행성 문제로
+          이어질 수 있습니다. 도박 문제 상담 —{' '}
+          <a href="tel:1336">한국도박문제예방치유원 1336</a>
         </p>
       </footer>
     </div>

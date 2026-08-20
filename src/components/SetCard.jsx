@@ -10,6 +10,7 @@ export default function SetCard({
   saved = false,
   onSave,
   onRemove,
+  onShare,
   footer,
 }) {
   const info = describeSet(numbers);
@@ -66,8 +67,17 @@ export default function SetCard({
 
       {footer}
 
-      {(onSave || onRemove) && (
+      {(onSave || onRemove || onShare) && (
         <div className="set-card__actions">
+          {onShare && (
+            <button
+              type="button"
+              className="btn btn--ghost btn--sm"
+              onClick={() => onShare(numbers)}
+            >
+              공유
+            </button>
+          )}
           {onSave && (
             <button
               type="button"

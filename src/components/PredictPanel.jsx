@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import NumberBall from './NumberBall';
 import SetCard from './SetCard';
+import AdSlot from './AdSlot';
 import { ALL_NUMBERS } from '../lib/draws';
 import { STRATEGIES, generateSets, structureScore, keyNumbers } from '../lib/predictor';
+import { shareNumbers } from '../lib/share';
 
 const COUNTS = [1, 3, 5, 10];
 
@@ -12,6 +14,14 @@ export default function PredictPanel({ model, draws, avgSum, savedKeys, onSave }
   const [excluded, setExcluded] = useState([]);
   const [showPicker, setShowPicker] = useState(false);
   const [sets, setSets] = useState([]);
+  const [toast, setToast] = useState('');
+
+  const handleShare = async (numbers) => {
+    const status = await shareNumbers(numbers);
+    if (status === 'shared') return;
+    setToast(status === 'copied' ? '번호를 복사했습니다' : '공유를 취소했습니다');
+    setTimeout(() => setToast(''), 2000);
+  };
 
   const toggleExcluded = (n) =>
     setExcluded((prev) =>
@@ -112,12 +122,13 @@ export default function PredictPanel({ model, draws, avgSum, savedKeys, onSave }
 
       <button
         type="button"
-        className="btn btn--primary"
+        className="btn btn--gold"
         onClick={handleGenerate}
         disabled={tooManyExcluded}
       >
         번호 생성하기
       </button>
+      {toast && <span className="toast">{toast}</span>}
       {tooManyExcluded && (
         <p className="field__hint field__hint--warn">
           제외한 번호가 너무 많습니다. 최소 6개는 남겨 주세요.
@@ -143,9 +154,14 @@ export default function PredictPanel({ model, draws, avgSum, savedKeys, onSave }
               keyNums={keyNumbers(numbers, model)}
               saved={savedKeys.has(numbers.join(','))}
               onSave={() => onSave(numbers, STRATEGIES[strategy].label)}
+              onShare={handleShare}
             />
           ))}
         </div>
+      )}
+
+      {sets.length > 0 && (
+        <AdSlot slot={import.meta.env.VITE_AD_SLOT_PREDICT} minHeight={250} />
       )}
 
       {sets.length === 0 && (

@@ -21,6 +21,16 @@ npm run dev          # http://localhost:5173
 | `npm run build` | `dist/` 로 프로덕션 빌드 |
 | `npm run preview` | 빌드 결과 미리보기 |
 | `npm run build:standalone` | 빌드 후 `standalone.html` 재생성 |
+| `node scripts/update-draws.mjs` | 동행복권에서 최신 회차를 받아 데이터 갱신 |
+
+## 배포 전 체크리스트
+
+1. `index.html`, `public/robots.txt`, `public/sitemap.xml` 의 `example.com` 을 실제 도메인으로 교체
+2. `og.png`(1200×630) 제작해 `public/` 에 배치
+3. `.env.example` 을 `.env` 로 복사하고 애드센스 ID 입력 (선택)
+4. `node scripts/update-draws.mjs` 로 회차 데이터 최신화
+
+유입·수익화 계획은 **[MARKETING.md](./MARKETING.md)** 참고.
 
 ## 화면 구성
 

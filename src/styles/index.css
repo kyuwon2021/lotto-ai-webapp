@@ -15,8 +15,11 @@
 
   --accent: #38bdf8;
   --accent-2: #a78bfa;
+  --gold: #f5c542;
+  --gold-deep: #d99e21;
   --warn: #fbbf24;
   --danger: #f87171;
+  --win: #34d399;
 
   --radius-sm: 10px;
   --radius: 16px;
@@ -113,10 +116,173 @@ button {
   color: var(--text-dim);
 }
 
-/* 탭 --------------------------------------------------------------- */
-.tabs {
+/* 히어로 ----------------------------------------------------------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 34px 20px 30px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(700px 320px at 50% -20%, rgba(245, 197, 66, 0.18), transparent 66%),
+    linear-gradient(165deg, #0d1a3d 0%, #0a1128 55%, #070c1c 100%);
+  box-shadow: var(--shadow);
+}
+
+.hero__glow {
+  position: absolute;
+  inset: -40% 30% 60%;
+  background: radial-gradient(circle, rgba(245, 197, 66, 0.22), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.hero > *:not(.hero__glow) {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__eyebrow {
+  margin: 0;
+  padding: 5px 14px;
+  border: 1px solid rgba(245, 197, 66, 0.4);
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.1);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffe08a;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(27px, 8vw, 44px);
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+}
+
+.hero__accent {
+  background: linear-gradient(100deg, #ffe9a8, var(--gold) 55%, var(--gold-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__sub {
+  margin: 0;
+  max-width: 30em;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.hero__sub b {
+  color: var(--text);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.hero__cta .btn {
+  align-self: auto;
+}
+
+.hero__marks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero__marks li {
+  position: relative;
+  padding-left: 15px;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.hero__marks li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--win);
+  font-weight: 800;
+}
+
+/* 카운트다운 ------------------------------------------------------- */
+.countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 197, 66, 0.28);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.5);
+}
+
+.countdown__title {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.countdown__title b {
+  color: #ffe08a;
+}
+
+.countdown__row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  background: rgba(148, 163, 184, 0.1);
+}
+
+.countdown__num {
+  font-size: clamp(20px, 6vw, 26px);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+}
+
+.countdown__label {
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
+
+.countdown__note {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* 탭 --------------------------------------------------------------- */
+.tabs {
+  display: flex;
   gap: 4px;
   padding: 4px;
   border: 1px solid var(--line);
@@ -124,17 +290,25 @@ button {
   background: var(--surface);
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tabs__btn {
   position: relative;
+  flex: 1 0 auto;
   border: none;
   background: transparent;
   color: var(--text-dim);
-  padding: 9px 6px;
+  padding: 9px 14px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
   transition: color 0.16s, background 0.16s;
 }
@@ -336,6 +510,22 @@ button {
 .btn--primary:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: 0 14px 32px rgba(56, 189, 248, 0.45);
+}
+
+.btn--gold {
+  background: linear-gradient(135deg, #ffe08a 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  color: #2a1c00;
+  box-shadow: 0 10px 26px rgba(245, 197, 66, 0.32);
+}
+
+.btn--gold:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(245, 197, 66, 0.5);
+}
+
+.btn--lg {
+  padding: 14px 30px;
+  font-size: 15.5px;
 }
 
 .btn--ghost {
@@ -915,6 +1105,160 @@ button {
 }
 
 /* ==================================================================
+   광고 슬롯
+   ================================================================== */
+.ad {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.3);
+  overflow: hidden;
+}
+
+.ad__label {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+}
+
+.ad__placeholder {
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.ad .adsbygoogle {
+  width: 100%;
+}
+
+/* ==================================================================
+   당첨 확인
+   ================================================================== */
+.latest {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(245, 197, 66, 0.3);
+  border-radius: var(--radius);
+  background: rgba(245, 197, 66, 0.07);
+}
+
+.latest__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffe08a;
+}
+
+.latest__balls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.latest__plus {
+  margin: 0 2px;
+  color: var(--text-faint);
+}
+
+.field__count {
+  color: var(--gold);
+}
+
+.picker__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.check-result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: rise 0.3s ease-out;
+}
+
+.check-result__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.5);
+  text-align: center;
+}
+
+.check-result__main.is-win {
+  border-color: rgba(52, 211, 153, 0.55);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.check-result__round {
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.check-result__rank {
+  font-size: clamp(22px, 6vw, 30px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.check-result__main.is-win .check-result__rank {
+  color: #6ee7b7;
+}
+
+.check-result__balls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+
+.check-result__bonus {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.18);
+  font-size: 11.5px;
+  color: #c4b5fd;
+}
+
+.check-result__history {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.check-result__history b {
+  color: var(--text);
+}
+
+.check-result__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toast {
+  font-size: 12px;
+  color: var(--win);
+}
+
+/* ==================================================================
    푸터
    ================================================================== */
 .footer {
@@ -948,11 +1292,25 @@ button {
   color: var(--text-dim);
 }
 
+.footer__lead {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
 .footer__note {
   margin: 0;
   font-size: 11.5px;
   line-height: 1.7;
   color: var(--text-faint);
+}
+
+.footer__note b {
+  color: var(--text-dim);
+}
+
+.footer__note a {
+  color: var(--accent);
 }
 
 /* ==================================================================

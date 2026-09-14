@@ -1259,6 +1259,369 @@ button {
 }
 
 /* ==================================================================
+   인기도 배지 (분산 전략)
+   ================================================================== */
+.pop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(5, 9, 20, 0.45);
+}
+
+.pop__grade {
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.pop__detail {
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
+
+.pop--best { border-color: rgba(52, 211, 153, 0.55); }
+.pop--best .pop__grade { color: #6ee7b7; }
+.pop--good .pop__grade { color: #a7f3d0; }
+.pop--mid .pop__grade { color: var(--text-dim); }
+.pop--warn .pop__grade { color: var(--warn); }
+.pop--bad { border-color: rgba(248, 113, 113, 0.45); }
+.pop--bad .pop__grade { color: var(--danger); }
+
+/* ==================================================================
+   타임머신
+   ================================================================== */
+.tm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tm__balls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+
+.tm__meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.tm__round {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.tm__bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.16);
+  overflow: hidden;
+}
+
+.tm__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+}
+
+.tm__count {
+  font-size: 11px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.tm__ranks {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.tm__rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.tm__rank.is-hit {
+  border-color: rgba(245, 197, 66, 0.6);
+  background: rgba(245, 197, 66, 0.1);
+}
+
+.tm__rank-label {
+  font-size: 10.5px;
+  color: var(--text-faint);
+}
+
+.tm__rank-count {
+  font-size: 17px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.tm__rank.is-hit .tm__rank-count {
+  color: var(--gold);
+}
+
+.tm__result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: rise 0.35s ease-out;
+}
+
+.tm__money {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.5);
+}
+
+.tm__money-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.tm__money-row b {
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.tm__money-row b.is-won {
+  color: var(--gold);
+}
+
+.tm__money-row--net {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.tm__money-row--net b {
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.tm__money-row--net.is-plus b { color: var(--win); }
+.tm__money-row--net.is-minus b { color: var(--danger); }
+
+.tm__line {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+.tm__line b { color: var(--text); }
+.tm__line--dim { color: var(--text-faint); }
+
+.tm__disclaimer {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  line-height: 1.65;
+  color: var(--text-faint);
+}
+
+.tm__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ==================================================================
+   번호 배틀
+   ================================================================== */
+.rivals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.rival {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all 0.16s;
+}
+
+.rival:hover { border-color: var(--line-strong); }
+
+.rival--on {
+  border-color: var(--gold);
+  background: rgba(245, 197, 66, 0.1);
+}
+
+.rival__emoji { font-size: 24px; line-height: 1; }
+
+.rival__name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.rival--on .rival__name { color: #ffe08a; }
+
+.battle {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.battle__score {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.5);
+}
+
+.battle__side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.battle__who {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.battle__pts {
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.battle__vs {
+  font-size: 11px;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.battle__round {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  animation: rise 0.3s ease-out;
+}
+
+.battle__round--win {
+  border-color: rgba(52, 211, 153, 0.55);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.battle__round--lose {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.battle__round-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.battle__answer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.battle__compare {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.battle__label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+.battle__balls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.battle__prize {
+  font-size: 11.5px;
+  color: var(--gold);
+}
+
+.battle__final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  background: rgba(245, 197, 66, 0.1);
+  animation: rise 0.35s ease-out;
+}
+
+.battle__final strong {
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.battle__final span {
+  font-size: 15px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==================================================================
    푸터
    ================================================================== */
 .footer {
@@ -1317,6 +1680,10 @@ button {
    반응형
    ================================================================== */
 @media (min-width: 620px) {
+  .battle__compare {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .set-grid {
     grid-template-columns: repeat(2, 1fr);
   }

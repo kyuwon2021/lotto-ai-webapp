@@ -6,6 +6,8 @@ import CheckPanel from './components/CheckPanel';
 import MachinePanel from './components/MachinePanel';
 import StatsPanel from './components/StatsPanel';
 import SavedPanel from './components/SavedPanel';
+import BattlePanel from './components/BattlePanel';
+import TimeMachinePanel from './components/TimeMachinePanel';
 import { parseDraws } from './lib/draws';
 import { buildModel } from './lib/predictor';
 import { averageSum } from './lib/stats';
@@ -13,8 +15,10 @@ import { loadSets, addSet, removeSet, clearSets } from './lib/storage';
 
 const TABS = [
   { key: 'predict', label: '번호 받기' },
-  { key: 'check', label: '당첨 확인' },
+  { key: 'battle', label: '⚔️ 배틀' },
+  { key: 'timemachine', label: '⏰ 타임머신' },
   { key: 'machine', label: '추첨기' },
+  { key: 'check', label: '당첨 확인' },
   { key: 'stats', label: '통계' },
   { key: 'saved', label: '보관함' },
 ];
@@ -86,6 +90,8 @@ export default function App() {
             onSave={handleSave}
           />
         )}
+        {tab === 'battle' && <BattlePanel model={model} draws={draws} />}
+        {tab === 'timemachine' && <TimeMachinePanel draws={draws} saved={saved} />}
         {tab === 'check' && <CheckPanel draws={draws} saved={saved} />}
         {tab === 'machine' && (
           <MachinePanel

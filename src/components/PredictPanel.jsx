@@ -5,6 +5,7 @@ import AdSlot from './AdSlot';
 import { ALL_NUMBERS } from '../lib/draws';
 import { STRATEGIES, generateSets, structureScore, keyNumbers } from '../lib/predictor';
 import { shareNumbers } from '../lib/share';
+import { spreadWeights, popularityIndex, popularityGrade, estimatedSplit } from '../lib/payout';
 
 const COUNTS = [1, 3, 5, 10];
 
@@ -31,7 +32,14 @@ export default function PredictPanel({ model, draws, avgSum, savedKeys, onSave }
   const handleGenerate = () => {
     setSets(
       generateSets(
-        { model, strategy, exclude: excluded, targetSum: Math.round(avgSum) },
+        {
+          model,
+          strategy,
+          exclude: excluded,
+          targetSum: Math.round(avgSum),
+          spread: spreadWeights(),
+          scoreCombo: (c) => popularityIndex(c, draws),
+        },
         count
       )
     );
@@ -145,18 +153,30 @@ export default function PredictPanel({ model, draws, avgSum, savedKeys, onSave }
 
       {sets.length > 0 && (
         <div className="set-grid">
-          {sets.map((numbers, i) => (
-            <SetCard
-              key={numbers.join('-')}
-              numbers={numbers}
-              index={i}
-              score={structureScore(numbers, draws)}
-              keyNums={keyNumbers(numbers, model)}
-              saved={savedKeys.has(numbers.join(','))}
-              onSave={() => onSave(numbers, STRATEGIES[strategy].label)}
-              onShare={handleShare}
-            />
-          ))}
+          {sets.map((numbers, i) => {
+            const pop = popularityIndex(numbers, draws);
+            const grade = popularityGrade(pop);
+            return (
+              <SetCard
+                key={numbers.join('-')}
+                numbers={numbers}
+                index={i}
+                score={structureScore(numbers, draws)}
+                keyNums={keyNumbers(numbers, model)}
+                saved={savedKeys.has(numbers.join(','))}
+                onSave={() => onSave(numbers, STRATEGIES[strategy].label)}
+                onShare={handleShare}
+                footer={
+                  <div className={`pop pop--${grade.tone}`}>
+                    <span className="pop__grade">{grade.label}</span>
+                    <span className="pop__detail">
+                      1등 시 예상 분배 {estimatedSplit(pop).toFixed(1)}명
+                    </span>
+                  </div>
+                }
+              />
+            );
+          })}
         </div>
       )}
 

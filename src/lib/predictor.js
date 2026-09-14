@@ -134,6 +134,13 @@ export const STRATEGIES = {
     label: '균형 조합',
     hint: '홀짝·구간·합계가 과거 평균에 가깝도록 맞춥니다.',
   },
+  spread: {
+    key: 'spread',
+    label: '분산 전략 ⭐',
+    hint:
+      '당첨 확률은 어떤 번호든 같습니다. 대신 남들이 덜 고르는 조합을 만들어, ' +
+      '1등이 됐을 때 나눠 가질 사람 수를 줄입니다. 기댓값을 높이는 유일한 방법입니다.',
+  },
   random: {
     key: 'random',
     label: '완전 랜덤',
@@ -141,12 +148,14 @@ export const STRATEGIES = {
   },
 };
 
-const weightFor = (strategy, entry) => {
+const weightFor = (strategy, entry, extra) => {
   switch (strategy) {
     case 'hot':
       return 0.05 + entry.parts.recent ** 2;
     case 'cold':
       return 0.05 + entry.parts.due ** 2;
+    case 'spread':
+      return extra?.spread?.[entry.number] ?? 1;
     case 'random':
       return 1;
     case 'balanced':
@@ -170,6 +179,8 @@ export function generateSet({
   exclude = [],
   include = [],
   targetSum = 138,
+  spread = null,
+  scoreCombo = null,
 }) {
   const locked = include.slice(0, 6);
   const blocked = new Set([...exclude, ...locked]);
@@ -182,9 +193,33 @@ export function generateSet({
   }
 
   const draw = () =>
-    [...locked, ...pickWeighted(pool, (n) => weightFor(strategy, model[n]), need)].sort(
-      (a, b) => a - b
-    );
+    [
+      ...locked,
+      ...pickWeighted(pool, (n) => weightFor(strategy, model[n], { spread }), need),
+    ].sort((a, b) => a - b);
+
+  // 분산 전략: 인기도가 충분히 낮은 후보들을 모아 그중 하나를 무작위로 고른다.
+  // 매번 최솟값만 쫓으면 조합이 거의 똑같아져 다양성이 사라진다.
+  if (strategy === 'spread' && scoreCombo) {
+    const pool2 = [];
+    let fallback = null;
+    let fallbackScore = Infinity;
+
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const candidate = draw();
+      const score = scoreCombo(candidate);
+      if (score < fallbackScore) {
+        fallbackScore = score;
+        fallback = candidate;
+      }
+      if (score <= 32) pool2.push(candidate);
+      if (pool2.length >= 8) break;
+    }
+
+    return pool2.length
+      ? pool2[Math.floor(Math.random() * pool2.length)]
+      : (fallback ?? draw());
+  }
 
   if (strategy !== 'balanced') return draw();
 

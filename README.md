@@ -23,10 +23,23 @@ npm run dev          # http://localhost:5173
 | `npm run build:standalone` | 빌드 후 `standalone.html` 재생성 |
 | `node scripts/update-draws.mjs` | 동행복권에서 최신 회차를 받아 데이터 갱신 |
 
+## 배포 (GitHub Pages)
+
+`.github/workflows/deploy.yml` 이 푸시될 때마다 자동으로 빌드·배포한다.
+
+주소: **https://kyuwon2021.github.io/lotto-ai-webapp/**
+
+워크플로가 Pages 를 자동으로 켜 주지만(`configure-pages` 의 `enablement`),
+권한 문제로 실패하면 저장소 **Settings → Pages → Source** 를
+**GitHub Actions** 로 한 번만 바꿔 주면 된다.
+
+배포 상태는 저장소의 **Actions** 탭에서 볼 수 있다.
+
 ## 배포 전 체크리스트
 
-1. `index.html`, `public/robots.txt`, `public/sitemap.xml` 의 `example.com` 을 실제 도메인으로 교체
-2. `og.png`(1200×630) 제작해 `public/` 에 배치
+1. `og.png`(1200×630) 제작해 `public/` 에 배치 — 카카오톡 공유 카드에 쓰인다
+2. 자체 도메인을 쓴다면 `index.html`·`public/robots.txt`·`public/sitemap.xml` 의
+   주소를 바꾸고, `public/CNAME` 에 도메인을 적는다
 3. `.env.example` 을 `.env` 로 복사하고 애드센스 ID 입력 (선택)
 4. `node scripts/update-draws.mjs` 로 회차 데이터 최신화
 

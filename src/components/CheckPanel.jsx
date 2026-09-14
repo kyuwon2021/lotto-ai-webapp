@@ -131,7 +131,10 @@ export default function CheckPanel({ draws, saved }) {
                   number={n}
                   size="md"
                   highlight={result.latest.matches.includes(n)}
-                  dimmed={!result.latest.matches.includes(n)}
+                  // 하나도 못 맞혔으면 흐리게 할 기준이 없다.
+                  dimmed={
+                    result.latest.matchCount > 0 && !result.latest.matches.includes(n)
+                  }
                 />
               ))}
             </div>

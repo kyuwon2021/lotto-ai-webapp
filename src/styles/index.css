@@ -1311,6 +1311,211 @@ button {
 }
 
 /* ==================================================================
+   슬롯머신
+   ================================================================== */
+:root {
+  /* SlotPanel.jsx 의 ITEM_H 와 반드시 같아야 착지 위치가 맞는다. */
+  --slot-item: 54px;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.slot__machine {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  width: 100%;
+  padding: 14px 10px;
+  border: 1px solid rgba(245, 197, 66, 0.4);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(420px 150px at 50% 0%, rgba(245, 197, 66, 0.14), transparent 70%),
+    linear-gradient(165deg, #131d3c, #070c1c);
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.6);
+}
+
+.slot__reel {
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: #05070f;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.slot__reel.is-locked {
+  border-color: var(--line-strong);
+}
+
+.slot__reel.is-hit {
+  border-color: var(--gold);
+  box-shadow: 0 0 16px rgba(245, 197, 66, 0.55);
+}
+
+/* 3칸이 보이는 창. 가운데 칸이 확정 값이다. */
+.slot__window {
+  position: relative;
+  height: calc(var(--slot-item) * 3);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 위아래를 어둡게 덮어 원통처럼 보이게 한다 */
+.slot__window::before,
+.slot__window::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--slot-item);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.slot__window::before {
+  top: 0;
+  background: linear-gradient(180deg, #05070f 8%, rgba(5, 7, 15, 0.55) 70%, transparent);
+  border-bottom: 1px solid rgba(245, 197, 66, 0.35);
+}
+
+.slot__window::after {
+  bottom: 0;
+  background: linear-gradient(0deg, #05070f 8%, rgba(5, 7, 15, 0.55) 70%, transparent);
+  border-top: 1px solid rgba(245, 197, 66, 0.35);
+}
+
+.slot__strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+.slot__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--slot-item);
+  flex-shrink: 0;
+  font-size: clamp(15px, 4.4vw, 20px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.slot__item--idle {
+  color: var(--text-faint);
+}
+
+.slot__live {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.slot__live-count b {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.slot__live-left {
+  color: var(--text-faint);
+}
+
+.slot__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.slot__controls .btn {
+  align-self: auto;
+}
+
+.slot__result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(5, 9, 20, 0.5);
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.slot__result.is-near {
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.slot__result.is-win {
+  border-color: var(--gold);
+  background: rgba(245, 197, 66, 0.13);
+  box-shadow: 0 0 46px rgba(245, 197, 66, 0.3);
+}
+
+.slot__balls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+
+.slot__headline {
+  font-size: clamp(17px, 4.8vw, 22px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.slot__result.is-win .slot__headline {
+  color: var(--gold);
+}
+
+.slot__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+
+.slot__stats b {
+  color: var(--gold);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 400px) {
+  :root {
+    --slot-item: 46px;
+  }
+
+  .slot__machine {
+    gap: 3px;
+    padding: 12px 7px;
+  }
+}
+
+/* ==================================================================
    즉석 복권
    ================================================================== */
 .scratch {

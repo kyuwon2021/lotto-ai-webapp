@@ -77,3 +77,28 @@ export function saveScratchStats(stats) {
   }
   return stats;
 }
+
+/* ── 슬롯머신 기록 ──────────────────────────────────────────── */
+
+const SLOT_KEY = 'lotto-ai:slot:v1';
+
+export function loadSlotStats() {
+  if (!canUseStorage()) return { plays: 0, best: 0 };
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(SLOT_KEY) ?? 'null');
+    if (!parsed || typeof parsed !== 'object') return { plays: 0, best: 0 };
+    return { plays: Number(parsed.plays) || 0, best: Number(parsed.best) || 0 };
+  } catch {
+    return { plays: 0, best: 0 };
+  }
+}
+
+export function saveSlotStats(stats) {
+  if (!canUseStorage()) return stats;
+  try {
+    window.localStorage.setItem(SLOT_KEY, JSON.stringify(stats));
+  } catch {
+    /* 무시 */
+  }
+  return stats;
+}

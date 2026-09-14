@@ -9,6 +9,7 @@ import SavedPanel from './components/SavedPanel';
 import BattlePanel from './components/BattlePanel';
 import TimeMachinePanel from './components/TimeMachinePanel';
 import ScratchPanel from './components/ScratchPanel';
+import SlotPanel from './components/SlotPanel';
 import { parseDraws } from './lib/draws';
 import { buildModel } from './lib/predictor';
 import { averageSum } from './lib/stats';
@@ -16,6 +17,7 @@ import { loadSets, addSet, removeSet, clearSets } from './lib/storage';
 
 const TABS = [
   { key: 'scratch', label: '🎟️ 즉석복권' },
+  { key: 'slot', label: '🎰 슬롯머신' },
   { key: 'predict', label: '번호 받기' },
   { key: 'battle', label: '⚔️ 배틀' },
   { key: 'timemachine', label: '⏰ 타임머신' },
@@ -102,6 +104,7 @@ export default function App() {
           />
         )}
         {tab === 'scratch' && <ScratchPanel model={model} draws={draws} />}
+        {tab === 'slot' && <SlotPanel model={model} draws={draws} />}
         {tab === 'battle' && <BattlePanel model={model} draws={draws} />}
         {tab === 'timemachine' && <TimeMachinePanel draws={draws} saved={saved} />}
         {tab === 'check' && <CheckPanel draws={draws} saved={saved} />}

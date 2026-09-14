@@ -42,7 +42,33 @@ function Countdown() {
   );
 }
 
-export default function Hero({ onPrimary, onSecondary, drawCount }) {
+/** 접힌 상태 — 마감 카운트다운만 한 줄로 남긴다. */
+function HeroBar({ onExpand }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const left = breakdown(nextSaleDeadline(now), now);
+
+  return (
+    <button type="button" className="hero-bar" onClick={onExpand}>
+      <span className="hero-bar__dot" aria-hidden="true" />
+      <span className="hero-bar__text">판매 마감까지</span>
+      <span className="hero-bar__time">
+        {left.days}일 {pad(left.hours)}:{pad(left.minutes)}:{pad(left.seconds)}
+      </span>
+      <span className="hero-bar__more" aria-hidden="true">
+        ▾
+      </span>
+    </button>
+  );
+}
+
+export default function Hero({ onPrimary, onSecondary, drawCount, open = true, onExpand }) {
+  if (!open) return <HeroBar onExpand={onExpand} />;
+
   return (
     <section className="hero">
       <div className="hero__glow" aria-hidden="true" />
@@ -64,10 +90,10 @@ export default function Hero({ onPrimary, onSecondary, drawCount }) {
 
       <div className="hero__cta">
         <button type="button" className="btn btn--gold btn--lg" onClick={onPrimary}>
-          번호 받기
+          🎟️ 즉석 복권 긁기
         </button>
         <button type="button" className="btn btn--ghost btn--lg" onClick={onSecondary}>
-          당첨 확인
+          번호 받기
         </button>
       </div>
 

@@ -8,12 +8,14 @@ import StatsPanel from './components/StatsPanel';
 import SavedPanel from './components/SavedPanel';
 import BattlePanel from './components/BattlePanel';
 import TimeMachinePanel from './components/TimeMachinePanel';
+import ScratchPanel from './components/ScratchPanel';
 import { parseDraws } from './lib/draws';
 import { buildModel } from './lib/predictor';
 import { averageSum } from './lib/stats';
 import { loadSets, addSet, removeSet, clearSets } from './lib/storage';
 
 const TABS = [
+  { key: 'scratch', label: '🎟️ 즉석복권' },
   { key: 'predict', label: '번호 받기' },
   { key: 'battle', label: '⚔️ 배틀' },
   { key: 'timemachine', label: '⏰ 타임머신' },
@@ -26,7 +28,7 @@ const TABS = [
 const draws = parseDraws();
 
 export default function App() {
-  const [tab, setTab] = useState('predict');
+  const [tab, setTab] = useState('scratch');
   const [saved, setSaved] = useState([]);
   const contentRef = useRef(null);
 
@@ -47,9 +49,13 @@ export default function App() {
   const handleRemove = useCallback((id) => setSaved(removeSet(id)), []);
   const handleClear = useCallback(() => setSaved(clearSets()), []);
 
+  // 한 번이라도 게임에 들어가면 히어로를 접는다.
+  // 펼친 상태로 두면 화면을 다 차지해 정작 게임이 스크롤 아래로 밀린다.
+  const [heroOpen, setHeroOpen] = useState(true);
+
   const goTo = useCallback((key) => {
     setTab(key);
-    contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setHeroOpen(false);
   }, []);
 
   const first = draws[0];
@@ -59,8 +65,10 @@ export default function App() {
     <div className="app">
       <Hero
         drawCount={draws.length}
-        onPrimary={() => goTo('predict')}
-        onSecondary={() => goTo('check')}
+        open={heroOpen}
+        onExpand={() => setHeroOpen(true)}
+        onPrimary={() => goTo('scratch')}
+        onSecondary={() => goTo('predict')}
       />
 
       <nav className="tabs" aria-label="화면 선택">
@@ -69,7 +77,10 @@ export default function App() {
             key={t.key}
             type="button"
             className={`tabs__btn${tab === t.key ? ' tabs__btn--on' : ''}`}
-            onClick={() => setTab(t.key)}
+            onClick={() => {
+              setTab(t.key);
+              setHeroOpen(false);
+            }}
             aria-current={tab === t.key ? 'page' : undefined}
           >
             {t.label}
@@ -90,6 +101,7 @@ export default function App() {
             onSave={handleSave}
           />
         )}
+        {tab === 'scratch' && <ScratchPanel model={model} draws={draws} />}
         {tab === 'battle' && <BattlePanel model={model} draws={draws} />}
         {tab === 'timemachine' && <TimeMachinePanel draws={draws} saved={saved} />}
         {tab === 'check' && <CheckPanel draws={draws} saved={saved} />}

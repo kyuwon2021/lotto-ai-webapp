@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-      # 작업 브랜치에서도 바로 배포되도록 둔다.
-      # main 으로 병합한 뒤에는 이 줄을 지워도 된다.
-      - claude/lottery-predictor-6wGvU
   workflow_dispatch:
 
 permissions:

@@ -23,17 +23,27 @@ npm run dev          # http://localhost:5173
 | `npm run build:standalone` | 빌드 후 `standalone.html` 재생성 |
 | `node scripts/update-draws.mjs` | 동행복권에서 최신 회차를 받아 데이터 갱신 |
 
-## 배포 (GitHub Pages)
+## 배포
 
-`.github/workflows/deploy.yml` 이 푸시될 때마다 자동으로 빌드·배포한다.
+이 저장소는 두 곳에 배포된다.
 
+### Vercel (이미 연결됨)
+
+저장소가 Vercel 에 연결되어 있어 **푸시할 때마다 자동으로 배포**된다.
+작업 브랜치 푸시는 Preview, `main` 푸시는 Production 으로 올라간다.
+주소는 저장소의 **Deployments** 또는 Vercel 대시보드에서 확인한다.
+
+### GitHub Pages
+
+`.github/workflows/deploy.yml` 이 빌드·배포한다.
 주소: **https://kyuwon2021.github.io/lotto-ai-webapp/**
 
-워크플로가 Pages 를 자동으로 켜 주지만(`configure-pages` 의 `enablement`),
-권한 문제로 실패하면 저장소 **Settings → Pages → Source** 를
-**GitHub Actions** 로 한 번만 바꿔 주면 된다.
-
-배포 상태는 저장소의 **Actions** 탭에서 볼 수 있다.
+> **먼저 한 번만 해야 할 설정이 있다.**
+> 저장소 **Settings → Pages → Source** 를 **GitHub Actions** 로 바꾼다.
+> 이 설정 없이는 워크플로가
+> `Resource not accessible by integration` 으로 실패한다.
+> 워크플로 토큰에는 Pages 사이트를 새로 만들 권한이 없기 때문이다.
+> 설정 후 **Actions** 탭에서 실패한 실행을 **Re-run** 하면 된다.
 
 ## 배포 전 체크리스트
 
